@@ -105,3 +105,11 @@ int main() {
 }
 
 //g++ -fopenmp program_name.cpp -o binary_name.out
+//input format: no. of vertices : 7
+edges: 6
+    0 1
+    0 2
+    1 3
+    1 4
+    2 5
+    2 6
