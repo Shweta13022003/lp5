@@ -13,9 +13,14 @@ void parallelBubbleSort(vector<int>& arr) {
         swapped = false;
         #pragma omp parallel for shared(arr, swapped)
         for (int i = 0; i < n - 1; i++) {
-            if (arr[i] > arr[i + 1]) {
-                swap(arr[i], arr[i + 1]);
-                swapped = true;
+            if (arr[i] > arr[i + 1]) 
+            {
+                // Use a critical section to serialize access to the swapped variable
+                #pragma omp critical
+                {
+                    swap(arr[i], arr[i + 1]);
+                    swapped = true;
+                }
             }
         }
     }
