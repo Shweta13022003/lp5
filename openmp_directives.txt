@@ -1,0 +1,45 @@
+### Directives:
+1. **`#pragma omp parallel`**: Specifies a block of code to be executed by multiple threads in parallel.
+
+2. **`#pragma omp for`**: Distributes the iterations of a loop across multiple threads for parallel execution.
+
+3. **`#pragma omp sections`**: Divides the following code block into sections to be executed by different threads in parallel.
+
+4. **`#pragma omp single`**: Specifies a block of code to be executed by only one thread.
+
+5. **`#pragma omp master`**: Specifies a block of code to be executed only by the master thread.
+
+6. **`#pragma omp barrier`**: Synchronizes all threads at a barrier point, ensuring that no thread proceeds beyond that point until all threads have reached it.
+
+7. **`#pragma omp critical`**: Specifies a block of code to be executed by only one thread at a time, preventing concurrent execution by multiple threads.
+
+8. **`#pragma omp atomic`**: Specifies an atomic operation that is executed as a single, indivisible unit, preventing data races when multiple threads access shared variables.
+
+### Functions:
+1. **`omp_get_thread_num()`**: Returns the unique thread ID of the calling thread.
+
+2. **`omp_get_num_threads()`**: Returns the total number of threads in the current parallel region.
+
+3. **`omp_set_num_threads(int num_threads)`**: Sets the number of threads to be used in subsequent parallel regions.
+
+4. **`omp_get_wtime()`**: Returns the wall-clock time in seconds, allowing you to measure elapsed time.
+
+5. **`omp_get_max_threads()`**: Returns the maximum number of threads that can be used in a parallel region.
+
+6. **`omp_get_num_procs()`**: Returns the number of available processing units (e.g., CPU cores) on the system.
+
+7. **`omp_set_dynamic(int dynamic_threads)`**: Sets whether dynamic adjustment of the number of threads is enabled (`dynamic_threads` = 1) or disabled (`dynamic_threads` = 0).
+
+8. **`omp_get_dynamic()`**: Returns the current status of dynamic adjustment of the number of threads.
+
+These are just a few of the most commonly used directives and functions in OpenMP. Depending on your specific requirements and parallelization tasks, you may encounter and use additional directives and functions.
+
+
+
+cuda execution
+nvcc programName.cu - o programName
+./programName or programName
+
+openMP execution
+g++ -fopenmp programName.cpp -o programName
+./programName
