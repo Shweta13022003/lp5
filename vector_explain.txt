@@ -1,0 +1,59 @@
+Sure, let's break down the provided CUDA code line by line and explain its functionality:
+
+### Device Kernels:
+
+```cpp
+__global__
+void add(int* A, int* B, int* C, int size) {
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (tid < size) {
+        C[tid] = A[tid] + B[tid];
+    }
+}
+
+__global__
+void multiply(int* A, int* B, int* C, int size) {
+    int row = blockIdx.y * blockDim.y + threadIdx.y;
+    int col = blockIdx.x * blockDim.x + threadIdx.x;
+
+    if (row < size && col < size) {
+        int sum = 0;
+        for (int i = 0; i < size; i++) {
+            sum += A[row * size + i] * B[i * size + col];
+        }
+        C[row * size + col] = sum;
+    }
+}
+```
+
+- These are CUDA kernel functions (`__global__` indicates they are executed on the GPU).
+- The `add` kernel performs element-wise addition of two vectors `A` and `B`, storing the result in vector `C`.
+- The `multiply` kernel performs matrix multiplication of matrices `A` and `B`, storing the result in matrix `C`.
+
+### Host Code:
+
+```cpp
+int main() {
+   ....
+}
+```
+
+- This is the `main` function of the program.
+- It starts by setting the size of the vectors and matrices (`N = 4` in this case).
+- For vector addition:
+  - Host memory is allocated for vectors `A`, `B`, and `C`, and they are initialized with random values.
+  - Device memory is allocated for `X`, `Y`, and `Z`, and data is copied from host to device.
+  - The `add` kernel is launched with appropriate grid and block dimensions.
+  - The result is copied back to the host, and memory is freed.
+- For matrix multiplication:
+  - Host memory is allocated for matrices `D`, `E`, and `F`, and they are initialized with random values.
+  - Device memory is allocated for `M`, `NMat`, and `O`, and data is copied from host to device.
+  - The `multiply` kernel is launched with appropriate grid and block dimensions.
+  - The result is copied back to the host, and memory is freed.
+
+### Utility Functions:
+
+The utility functions `initializeVector`, `initializeMatrix`, `printVector`, and `printMatrix` are not included in this snippet, but they are assumed to be defined elsewhere in the codebase. These functions are responsible for initializing vectors and matrices with random values and printing them.
+
+Overall, this CUDA code demonstrates how to perform vector addition and matrix multiplication using CUDA kernels, as well as how to manage memory allocation and data transfer between the host and the device.
