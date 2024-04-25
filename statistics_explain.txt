@@ -1,0 +1,87 @@
+
+```cpp
+int parallelMin(vector<int> vec) {
+    int min_val = vec[0];
+    #pragma omp parallel for
+    for (int i = 1; i < vec.size(); i++) {
+        if (vec[i] < min_val) {
+            min_val = vec[i];
+        }
+    }
+    return min_val;
+}
+```
+
+- `int parallelMin(vector<int> vec)`: This line defines a function named `parallelMin` that takes a vector of integers (`vec`) as input and returns an integer representing the minimum value in the vector.
+
+- `int min_val = vec[0];`: This line initializes `min_val` to the first element of the vector.
+
+- `#pragma omp parallel for`: This line is an OpenMP directive that parallelizes the following loop across multiple threads. Each iteration of the loop will be executed by a separate thread.
+
+- The loop iterates over the elements of the vector, starting from the second element (`i = 1`), and updates `min_val` if a smaller element is found.
+
+- Finally, the function returns the minimum value.
+
+The `parallelMax`, `parallelSum`, and `parallelAverage` functions have similar structures, but they find the maximum value, sum, and average of the elements in the vector, respectively.
+
+The `main` function prompts the user to input the number of elements and the elements themselves, calls the parallel functions to compute various statistics, and prints the results along with the time required for each computation.
+
+```cpp
+int parallelMax(vector<int> vec) {
+    int max_val = vec[0];
+    #pragma omp parallel for
+    for (int i = 1; i < vec.size(); i++) {
+        if (vec[i] > max_val) {
+            max_val = vec[i];
+        }
+    }
+    return max_val;
+}
+```
+
+- `int parallelMax(vector<int> vec)`: This function takes a vector of integers `vec` as input and returns an integer representing the maximum value in the vector.
+
+- `int max_val = vec[0];`: Initialize `max_val` to the first element of the vector.
+
+- `#pragma omp parallel for`: Parallelize the following loop across multiple threads. Each thread will execute a portion of the loop iterations.
+
+- The loop iterates over the elements of the vector, starting from the second element (`i = 1`), and updates `max_val` if a larger element is found.
+
+- Finally, the function returns the maximum value.
+
+```cpp
+int parallelSum(vector<int> vec) {
+    int sum = 0;
+    #pragma omp parallel for
+    for (int i = 0; i < vec.size(); i++) {
+        sum += vec[i];
+    }
+    return sum;
+}
+```
+
+- `int parallelSum(vector<int> vec)`: This function takes a vector of integers `vec` as input and returns an integer representing the sum of all elements in the vector.
+
+- `int sum = 0;`: Initialize `sum` to zero.
+
+- `#pragma omp parallel for`: Parallelize the following loop across multiple threads. Each thread will execute a portion of the loop iterations.
+
+- The loop iterates over the elements of the vector and accumulates their values into the `sum` variable.
+
+- Finally, the function returns the sum.
+
+```cpp
+float parallelAverage(vector<int> vec) {
+    int sum = parallelSum(vec);
+    float avg = float(sum) / vec.size();
+    return avg;
+}
+```
+
+- `float parallelAverage(vector<int> vec)`: This function takes a vector of integers `vec` as input and returns a floating-point value representing the average of all elements in the vector.
+
+- `int sum = parallelSum(vec);`: Compute the sum of the elements in the vector using the `parallelSum` function.
+
+- Calculate the average by dividing the sum by the number of elements in the vector, converting one of the operands to `float` to ensure a floating-point division.
+
+- Finally, return the average as a floating-point value.
