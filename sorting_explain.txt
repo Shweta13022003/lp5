@@ -1,0 +1,102 @@
+A) Bubble sort
+```cpp
+void parallelBubbleSort(vector<int>& arr) {
+    int n = arr.size();
+    bool swapped = true;
+```
+
+- `void parallelBubbleSort(vector<int>& arr)`: This line declares a function named `parallelBubbleSort` that takes a reference to a vector of integers (`arr`) as its parameter and returns void.
+
+- `int n = arr.size();`: This line calculates the size of the input vector `arr` and assigns it to the variable `n`. This will be used as the number of elements in the array.
+
+- `bool swapped = true;`: This line initializes a boolean variable `swapped` to true. This variable will be used to track whether any elements were swapped during a pass through the array. It's initialized to true to ensure that the loop executes at least once.
+
+```cpp
+    while (swapped) {
+        swapped = false;
+```
+
+- `while (swapped)`: This line starts a while loop that continues as long as the `swapped` variable is true. If no swaps are made during a pass through the array, `swapped` will be false, and the loop will terminate.
+
+- `swapped = false;`: Inside the loop, `swapped` is reset to false at the beginning of each iteration. This assumes no swaps have been made yet.
+
+```cpp
+        #pragma omp parallel for shared(arr, swapped)
+        for (int i = 0; i < n - 1; i++) {
+```
+
+- `#pragma omp parallel for shared(arr, swapped)`: This line is a pragma directive used in OpenMP for parallelization. It instructs the compiler to parallelize the following loop across multiple threads. The `shared(arr, swapped)` clause specifies that the `arr` and `swapped` variables are shared among all threads, meaning they are accessible and modifiable by all threads.
+
+- `for (int i = 0; i < n - 1; i++)`: This line starts a for loop that iterates over the array elements from index 0 to `n - 2` (the second-to-last element). This loop is responsible for performing the bubble sort algorithm.
+
+```cpp
+            if (arr[i] > arr[i + 1]) {
+                swap(arr[i], arr[i + 1]);
+                swapped = true;
+            }
+        }
+```
+
+- `if (arr[i] > arr[i + 1])`: Inside the loop, this line checks if the current element is greater than the next element in the array. If it is, it means they are out of order, and a swap needs to be performed.
+
+- `swap(arr[i], arr[i + 1]);`: This line swaps the current element with the next element in the array, effectively bubbling up the larger element.
+
+- `swapped = true;`: After performing a swap, this line sets the `swapped` variable to true, indicating that at least one swap has been made during this pass through the array.
+
+After the while loop completes and no swaps are made in a pass through the array, the sorting process terminates, and the array `arr` will be sorted in ascending order.
+
+Example:
+Consider the input vector `arr = {5, 3, 8, 2, 1}`.
+- In the first iteration of the while loop, the elements are not sorted, so the loop proceeds.
+- Inside the parallelized for loop, multiple threads will execute the sorting operations simultaneously.
+- After a few iterations, the elements will be sorted, and the `swapped` variable will become false, causing the while loop to terminate.
+- The final sorted array will be `{1, 2, 3, 5, 8}`.
+
+B) Merg sort
+
+- `void merge(vector<int>& arr, int l, int m, int r)`: This line declares a function named `merge` that takes a reference to a vector of integers (`arr`) and three integers `l`, `m`, and `r` representing the indices of the subarrays to be merged. It returns void.
+
+- `int n1 = m - l + 1;` and `int n2 = r - m;`: These lines calculate the sizes of the two subarrays to be merged.
+
+- `vector<int> L(n1), R(n2);`: This line declares two temporary vectors `L` and `R` to store the elements of the two subarrays.
+
+- The next two for loops copy the elements of the two subarrays into the temporary vectors `L` and `R`, respectively.
+
+- The remaining code merges the two sorted subarrays `L` and `R` back into the original array `arr`.
+
+```cpp
+void parallelMergeSort(vector<int>& arr, int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+        #pragma omp parallel sections
+        {
+            #pragma omp section
+            parallelMergeSort(arr, l, m);
+            #pragma omp section
+            parallelMergeSort(arr, m + 1, r);
+        }
+        merge(arr, l, m, r);
+    }
+}
+```
+
+- `void parallelMergeSort(vector<int>& arr, int l, int r)`: This line declares a function named `parallelMergeSort` that takes a reference to a vector of integers (`arr`) and two integers `l` and `r` representing the indices of the subarray to be sorted. It returns void.
+
+- `if (l < r) { ... }`: This line checks if the subarray to be sorted has more than one element. If it does, the function proceeds with sorting; otherwise, it returns.
+
+- `int m = l + (r - l) / 2;`: This line calculates the middle index of the subarray.
+
+- The `#pragma omp parallel sections` directive parallelizes the sorting process into two sections:
+
+  - The first section recursively sorts the left half of the subarray.
+  - The second section recursively sorts the right half of the subarray.
+
+- After both sections have completed, the `merge` function is called to merge the sorted halves of the subarray.
+
+Example:
+Consider the input vector `arr = {38, 27, 43, 3, 9, 82, 10}`.
+- The `parallelMergeSort` function is called with `l = 0` and `r = 6`.
+- The function calculates `m = 3`.
+- The sorting process is parallelized into two sections: sorting the left half `[38, 27, 43, 3]` and sorting the right half `[9, 82, 10]`.
+- After sorting each half, the `merge` function is called to merge the sorted halves.
+- The final sorted array will be `{3, 9, 10, 27, 38, 43, 82}`.
