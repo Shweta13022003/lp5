@@ -1,0 +1,138 @@
+
+```python
+import tensorflow as tf
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+These lines import the necessary libraries for data analysis and visualization, including TensorFlow for building the model, NumPy for numerical computations, Pandas for handling data in DataFrames, and Matplotlib for plotting graphs.
+
+```python
+(X_train , y_train), (X_test , y_test) = tf.keras.datasets.boston_housing.load_data(
+    path='boston_housing_npz',
+    test_split=0.2,
+    seed=42
+)
+```
+This section loads the Boston Housing dataset, splitting it into training and testing sets. It also sets the path to the dataset and specifies the test split ratio and random seed.
+
+```python
+(X_train.shape, type(X_train)), (X_test.shape, type(X_test)), (y_train.shape, type(y_train)), (y_test.shape, type(y_test))
+```
+These lines print the shapes and types of the training and testing data arrays.
+
+```python
+X_train_df = pd.DataFrame(X_train)
+y_train_df = pd.DataFrame(y_train)
+```
+This code converts the training data arrays into Pandas DataFrames.
+
+```python
+X_train_df.head(10)
+```
+This line displays the first 10 rows of the training data DataFrame.
+
+```python
+X_train_df.info()
+```
+This line provides information about the training data DataFrame, including column data types and missing values.
+
+```python
+X_train_df.describe()
+```
+This line generates descriptive statistics of the training data DataFrame, including count, mean, standard deviation, minimum, and maximum values.
+
+```python
+ct = make_column_transformer(
+    (MinMaxScaler(), [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+)
+```
+This code creates a column transformer for scaling the numerical features using MinMaxScaler.
+
+```python
+X_train = ct.fit_transform(X_train).astype('float32')
+X_test = ct.transform(X_test).astype('float32')
+y_train = y_train.astype('float32')
+y_test = y_test.astype('float32')
+```
+These lines apply the column transformer to normalize the features and convert the data type to float32.
+
+```python
+pd.DataFrame(X_train).describe()
+```
+This line displays descriptive statistics of the normalized training data features.
+
+```python
+X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, random_state=42)
+```
+This code splits the training data into training and validation sets using a test size of 0.1 and a random state of 42.
+
+```python
+tf.random.set_seed(42)
+```
+This line sets the random seed for reproducibility.
+
+```python
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(units=10, activation='relu', input_shape=(X_train.shape[1],), name='Dense_1'),
+    tf.keras.layers.Dense(units=100, activation='relu', name='Dense_2'),
+    tf.keras.layers.Dense(units=1, name='Prediction')
+])
+```
+This section defines the architecture of the neural network model using the Sequential API. It consists of two dense layers with ReLU activation functions and an output layer with a linear activation function.
+
+I'll continue explaining the rest in the next message.
+
+Continuing from where we left off:
+
+```python
+model.compile(
+    loss=tf.keras.losses.mean_squared_error,
+    optimizer=tf.keras.optimizers.RMSprop(learning_rate=0.01),
+    metrics=['mse']
+)
+```
+This line compiles the model, specifying the loss function (mean squared error), optimizer (RMSprop with a learning rate of 0.01), and evaluation metric (mean squared error).
+
+```python
+history = model.fit(
+    X_train,
+    y_train,
+    batch_size=32,
+    epochs=50,
+    validation_data=(X_val, y_val)
+)
+```
+This code trains the model on the training data for 50 epochs with a batch size of 32. It also validates the model's performance on the validation data during training.
+
+```python
+y_train.mean(), y_val.mean()
+```
+These lines print the mean values of the training and validation labels.
+
+```python
+print("Evaluation on Test data \n")
+loss, mse = model.evaluate(X_test, y_test, batch_size=32)
+print(f"\nModel loss on test set: {loss}")
+print(f"Model mean squared error on test set: {(mse):.2f}")
+```
+This section evaluates the trained model on the test data and prints out the loss and mean squared error.
+
+```python
+pd.DataFrame(history.history).plot(figsize=(6, 4), xlabel="Epochs", ylabel="Loss", title='Loss Curves')
+plt.show()
+```
+These lines plot the training and validation loss curves over epochs, visualizing the model's training progress.
+
+```python
+y_pred = model.predict(X_test)
+```
+This line makes predictions on the test data using the trained model.
+
+```python
+y_pred[0]
+```
+This line displays the first prediction from the test data.
+
+This code provides a comprehensive analysis of the Boston Housing dataset, including data preprocessing, model training, evaluation, and visualization.
