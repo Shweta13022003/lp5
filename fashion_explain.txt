@@ -1,0 +1,68 @@
+
+```python
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from tensorflow import keras
+import numpy as np
+```
+This section imports the necessary libraries: TensorFlow for building and training the neural network, Matplotlib for plotting graphs, and NumPy for numerical computations.
+
+```python
+(x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
+```
+This line loads the Fashion MNIST dataset. It consists of 60,000 training images and 10,000 testing images of clothing items in grayscale, each image being a 28x28 pixel array.
+
+```python
+plt.imshow(x_train[1])
+```
+This line displays the second image in the training dataset using Matplotlib's imshow function.
+
+```python
+x_train = x_train.astype('float32') / 255.0
+x_test = x_test.astype('float32') / 255.0
+```
+These lines normalize the pixel values of the images to the range [0, 1] by dividing each pixel value by 255. This standardizes the input data, making it easier for the neural network to learn.
+
+```python
+x_train = x_train.reshape(-1, 28, 28, 1)
+x_test = x_test.reshape(-1, 28, 28, 1)
+```
+These lines reshape the input data to have a 4D shape suitable for convolutional neural networks (CNNs). The "-1" in the reshape function infers the number of samples, while "28, 28, 1" specifies the height, width, and number of channels (in this case, 1 for grayscale).
+
+```python
+model = keras.Sequential([
+    keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28,28,1)),
+    keras.layers.MaxPooling2D((2,2)),
+    keras.layers.Dropout(0.25),
+    keras.layers.Conv2D(64, (3,3), activation='relu'),
+    keras.layers.MaxPooling2D((2,2)),
+    keras.layers.Dropout(0.25),
+    keras.layers.Conv2D(128, (3,3), activation='relu'),
+    keras.layers.Flatten(),
+    keras.layers.Dense(128, activation='relu'),
+    keras.layers.Dropout(0.25),
+    keras.layers.Dense(10, activation='softmax')
+])
+```
+This section defines the architecture of the CNN model using the Sequential API provided by Keras. It consists of three convolutional layers with max-pooling and dropout layers for regularization, followed by two fully connected (dense) layers. The final dense layer has 10 units with a softmax activation function, which outputs probabilities for each class.
+
+```python
+model.summary()
+```
+This line prints a summary of the model architecture, including the number of parameters in each layer.
+
+```python
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+```
+This line compiles the model, specifying the optimizer ('adam'), loss function ('sparse_categorical_crossentropy' for integer labels), and evaluation metric ('accuracy').
+
+```python
+history = model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+```
+This line trains the model on the training data (`x_train` and `y_train`) for 10 epochs. It also validates the model's performance on the test data during training.
+
+```python
+test_loss, test_acc = model.evaluate(x_test, y_test)
+print('Test accuracy:', test_acc)
+```
+This part evaluates the trained model on the test data and prints out the test accuracy. It gives an indication of how well the model generalizes to unseen data.
