@@ -1,0 +1,49 @@
+
+- `struct Graph { ... };`: This defines a structure named `Graph` to represent a graph data structure.
+
+- `int V;`: This member variable represents the number of vertices in the graph.
+
+- `vector<vector<int>> adj;`: This member variable is a vector of vectors, representing the adjacency list of the graph. Each inner vector corresponds to a vertex and contains the indices of vertices adjacent to that vertex.
+
+- `Graph(int V) { ... }`: This is the constructor of the `Graph` structure. It takes the number of vertices (`V`) as a parameter and initializes the graph with `V` vertices. It also resizes the adjacency list to accommodate `V` vertices.
+
+- `void addEdge(int u, int v) { ... }`: This method adds an undirected edge between vertices `u` and `v`. It adds `v` to the adjacency list of `u` and vice versa, assuming the graph is undirected.
+
+
+  
+  ### BFS Function:
+- `void BFS(int start) { ... }`: This function performs a Breadth-First Search (BFS) traversal starting from the vertex `start`.
+
+- `vector<bool> visited(V, false);`: This vector is used to keep track of visited vertices. It is initialized with `V` elements, all initially set to `false`.
+
+- `queue<int> q;`: This queue is used to store vertices that need to be visited. It starts with the `start` vertex.
+
+- The `while` loop continues until the queue is empty. Inside the loop:
+  - The front vertex `u` is removed from the queue.
+  - Vertex `u` is printed to the console.
+  - Each adjacent vertex `v` of `u` is checked. If `v` has not been visited yet, it is marked as visited and added to the queue.
+
+
+  ### DFS Function:
+- `void DFS(int start) { ... }`: This function performs a Depth-First Search (DFS) traversal starting from the vertex `start`.
+
+- `#pragma omp parallel { ... }`: This directive creates a parallel region where threads will execute in parallel.
+
+- `#pragma omp single nowait { ... }`: This directive ensures that the code block inside it is executed only once by a single thread, without waiting for synchronization with other threads.
+
+- Inside the parallel region, `DFSUtil` is called once to start the DFS traversal.
+
+
+  
+  ### DFSUtil Function:
+
+- `void DFSUtil(int u, vector<bool>& visited) { ... }`: This function is a helper function used by the DFS traversal algorithm. It recursively explores all vertices reachable from vertex `u`.
+
+- `visited[u] = true;`: Marks the current vertex `u` as visited.
+
+- `cout << u << " ";`: Prints the current vertex `u`.
+
+- The `for` loop iterates over all adjacent vertices of vertex `u`. For each adjacent vertex `v`:
+  - If `v` has not been visited, `DFSUtil` is called recursively to explore `v`.
+
+This breakdown provides a detailed explanation of each section of the code, including the graph structure, BFS function, DFS function, and the DFSUtil helper function.
